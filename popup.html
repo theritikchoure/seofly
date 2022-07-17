@@ -1,124 +1,131 @@
 <!DOCTYPE html>
-<link rel="stylesheet" href="css/popup.css">
+<link rel="stylesheet" href="css/popup.css" />
 <html>
-<body id="seofly-body">
+  <body id="seofly-body">
     <div id="header">
-        <div>
-            <img alt="seofly-extension" src="assets/logo.png" width="90" id="logo">
-            <span id="title">SEO extension</span>
-        </div>
-        <div>
-          <span>
-            <a href="https://mangools.com/users/sign_up/?ref=chrome-ext" data-blank="" rel="noopener" style="margin-top: -2px;">
-            <button id="id_Get">Official Doc</button>
+      <div id="left-header">
+        <span id="title">SEOFLY</span>
+      </div>
+      <div id="right-header">
+        <span>
+            <a href="https://theritikchoure.github.io" target="_blank" id="generate_report">
+                Official Website
             </a>
-          </span>
-        </div>
+        </span>
+      </div>
     </div>
 
-    <div id="main-wrapper">
-        <h2 id="base-url"></h2>
-
-        <!-- Site Title -->
-        <div class="row">
-            <div class="col-6">
-                Title :
-            </div>
-            <div class="col-6" id="site-title">
-
-            </div>
-        </div>
-
-        <!-- Site Meta Description -->
-        <div class="row">
-            <div class="col-6">
-                Meta Description :
-            </div>
-            <div class="col-6" id="site-description">
-
-            </div>
-        </div>
-        
-        <!-- Headings -->
-        <div class="row">
-            <div class="col-6">
-                Headings :
-            </div>
-            <div class="col-6" id="site-headings">
-
-            </div>
-        </div>
-        
-        <!-- Alt Text Images -->
-        <div class="row">
-            <div class="col-6">
-                Alt Text in Images :
-            </div>
-            <div class="col-6" id="site-alt-text">
-
-            </div>
-        </div>
-        
-        <!-- XML Sitemap -->
-        <div class="row">
-            <div class="col-6">
-                XML Sitemap :
-            </div>
-            <div class="col-6" id="site-xml">
-
-            </div>
-        </div>
-        
-        <!-- Robots Txt -->
-        <div class="row">
-            <div class="col-6">
-                Robots.txt :
-            </div>
-            <div class="col-6" id="site-robots">
-
-            </div>
-        </div>
-        
-        <!-- Iframe -->
-        <div class="row">
-            <div class="col-6">
-                Iframe :
-            </div>
-            <div class="col-6" id="site-iframe">
-
-            </div>
-        </div>
-        
-        <!-- Favicon -->
-        <div class="row">
-            <div class="col-6">
-                Favicon :
-            </div>
-            <div class="col-6" id="site-favicon">
-
-            </div>
-        </div>
-        
-        <!-- Doctype -->
-        <div class="row">
-            <div class="col-6">
-                Doctype :
-            </div>
-            <div class="col-6" id="site-doctype">
-
-            </div>
-        </div>
-       
-        <!-- Encoding -->
-        <div class="row">
-            <div class="col-6">
-                Encoding :
-            </div>
-            <div class="col-6" id="site-encoding">
-
-            </div>
-        </div>
+    <div id="tagline">
+        Feel Good With Growth
     </div>
-<script src="popup.js"></script>
-</body>
+
+    <div id="report-btn">Generate Report</div>
+
+    <div id="main-wrapper" style="display: none">
+      <h2 id="base-url"></h2>
+
+      <!-- Site Title -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">Title</div>
+            <div class="col-6 card-value" id="site-title"></div>
+            <div class="col-6 card-value" id="title-length"></div>
+          </div>
+      </div>
+
+      <!-- Site Meta Description -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">Meta Description :</div>
+            <div class="col-6 card-value" id="site-description"></div>
+            <div class="col-6 card-value" id="description-length"></div>
+          </div>
+      </div>
+
+      <!-- Headings -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">Headings :</div>
+            <div class="col-6 card-value" id="site-headings"></div>
+            <div class="col-6 card-value" >
+                <div class="row">
+                    <div class="col-2">H1 : <span id="heading-h1"></span></div>
+                    <div class="col-2">H2 : <span id="heading-h2"></span></div>
+                    <div class="col-2">H3 : <span id="heading-h3"></span></div>
+                    <div class="col-2">H4 : <span id="heading-h4"></span></div>
+                    <div class="col-2">H5 : <span id="heading-h5"></span></div>
+                    <div class="col-2">H6 : <span id="heading-h6"></span></div>
+                </div>
+            </div>
+          </div>
+      </div>
+
+      <!-- Alt Text Images -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">Alt Text in Images :</div>
+            <div class="col-6 card-value" id="site-alt-text"></div>
+          </div>
+      </div>
+
+      <!-- XML Sitemap -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">XML Sitemap :</div>
+            <div class="col-6 card-value" id="site-xml"></div>
+          </div>
+      </div>
+
+      <!-- Robots Txt -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">Robots.txt :</div>
+            <div class="col-6 card-value" id="site-robots"></div>
+          </div>
+      </div>
+
+      <!-- Iframe -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">Iframe :</div>
+            <div class="col-6 card-value" id="site-iframe"></div>
+          </div>
+      </div>
+
+      <!-- Favicon -->
+      <div class="card">
+        <div>
+            <div class="col-6 card-title">Favicon :</div>
+            <div class="col-6 card-value" id="site-favicon"></div>
+        </div>
+      </div>
+
+      <!-- Doctype -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">Doctype :</div>
+            <div class="col-6 card-value" id="site-doctype"></div>
+          </div>
+      </div>
+
+      <!-- Encoding -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">Encoding :</div>
+            <div class="col-6 card-value" id="site-encoding"></div>
+          </div>
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="left-footer">
+        <p>SEOFLY - On Page SEO Extension</p>
+      </div>
+
+      <div class="right-footer">
+        <p>Made by Ritik</p>
+      </div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
 </html>

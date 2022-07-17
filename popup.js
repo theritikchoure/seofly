@@ -1,5 +1,5 @@
 // const fetchDocumentData = () => {
-  document.getElementById("id_Get").onclick = () => {
+  document.getElementById("report-btn").onclick = () => {
     console.log("onclick")
   chrome.runtime.sendMessage({ method: "clear" }, () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -144,7 +144,7 @@ async function getDocumentInfo() {
   let robotsTxt = robotsRes.status === 404 ? 'Not found' : 'Found';
 
   // Iframe
-  let iframe = document.getElementsByTagName('iframe').length > 0 ? 'Iframe Found' : 'Iframe Not Found';
+  let iframe = document.getElementsByTagName('iframe').length > 0 ? true : false;
 
   // Favicon
   let favicon = getFavicon()
@@ -185,9 +185,9 @@ async function getDocumentInfo() {
   // links (End)
 
 
-  let keyPoints = {title, description, h1Count, favicon, imageAltText,
-                   xmlSitemap, robotsTxt, doctype, encoding, iframe, canonicalUrl,
-                   noindexTag, ssl, ogTags, jsCount, cssCount}
+  let keyPoints = {title, description, h1Count, h2Count, h3Count, h4Count, h5Count, h6Count, 
+                   favicon, imageAltText, xmlSitemap, robotsTxt, doctype, encoding, iframe, 
+                   canonicalUrl, noindexTag, ssl, ogTags, jsCount, cssCount }
 
   let dataObject = { baseUrl, keyPoints }
 
@@ -195,16 +195,80 @@ async function getDocumentInfo() {
 }
 
 function dataToPopup(response) {
+
+  const { keyPoints, baseUrl } = response.value;
+
   console.log("datatopopup")
-  document.getElementById("base-url").innerHTML = response.value.baseUrl;
-  document.getElementById("site-title").innerHTML = response.value.keyPoints.title;
-  document.getElementById("site-description").innerHTML = response.value.keyPoints.description;
-  document.getElementById("site-headings").innerHTML = response.value.keyPoints.h1Count;
-  document.getElementById("site-alt-text").innerHTML = response.value.keyPoints.imageAltText;
-  document.getElementById("site-xml").innerHTML = response.value.keyPoints.xmlSitemap;
-  document.getElementById("site-robots").innerHTML = response.value.keyPoints.robotsTxt;
-  document.getElementById("site-iframe").innerHTML = response.value.keyPoints.iframe;
-  document.getElementById("site-favicon").innerHTML = response.value.keyPoints.favicon;
-  document.getElementById("site-doctype").innerHTML = response.value.keyPoints.doctype;
-  document.getElementById("site-encoding").innerHTML = response.value.keyPoints.encoding;
+
+  document.getElementById("report-btn").style.display = "none";
+  document.getElementById("main-wrapper").style.display = "block";
+
+  document.getElementById("base-url").innerHTML = baseUrl;
+
+  // Title
+  document.getElementById("site-title").innerHTML = keyPoints.title;
+  document.getElementById("title-length").innerHTML = "<b>Length : </b>" + keyPoints.title.length;
+  if(keyPoints.title.length > 10 && keyPoints.title.length < 70) {
+    document.getElementById('site-title').classList.add("success-mark")
+  }
+
+  // Description
+  document.getElementById("site-description").innerHTML = keyPoints.description;
+  document.getElementById("description-length").innerHTML = "<b>Length : </b>" + keyPoints.description.length;
+  if(keyPoints.description.length > 70 && keyPoints.description.length < 320) {
+    document.getElementById('site-description').classList.add("success-mark")
+  }
+
+  // Headings
+  document.getElementById("heading-h1").innerHTML = keyPoints.h1Count;
+  document.getElementById("heading-h2").innerHTML = keyPoints.h2Count;
+  document.getElementById("heading-h3").innerHTML = keyPoints.h3Count;
+  document.getElementById("heading-h4").innerHTML = keyPoints.h4Count;
+  document.getElementById("heading-h5").innerHTML = keyPoints.h5Count;
+  document.getElementById("heading-h6").innerHTML = keyPoints.h6Count;
+  if(keyPoints.h1Count > 1) {
+    document.getElementById("site-headings").innerHTML = "Your Webpage has more than 1 h1 tags";
+    document.getElementById('site-headings').classList.add("error-mark")
+  } else if(keyPoints.h1Count === 1) {
+    document.getElementById("site-headings").innerHTML = "Good, Your webpage has only 1 h1 tag";
+    document.getElementById('site-headings').classList.add("success-mark")
+  } else if(keyPoints.h1Count <= 0) {
+    document.getElementById("site-headings").innerHTML = "Oops, your webpage has not any h1 tag";
+    document.getElementById('site-headings').classList.add("warning-mark")
+  }
+
+  document.getElementById("site-alt-text").innerHTML = keyPoints.imageAltText;
+  document.getElementById("site-xml").innerHTML = keyPoints.xmlSitemap;
+  document.getElementById("site-robots").innerHTML = keyPoints.robotsTxt;
+
+  // Iframe
+  if(keyPoints.iframe) {
+    document.getElementById("site-iframe").classList.add("error-mark")
+    document.getElementById("site-iframe").innerHTML = "Oops, Your website contains iframe";
+  } else {
+    document.getElementById("site-iframe").classList.add("error-mark")
+    document.getElementById("site-iframe").innerHTML = "Perfect, no iframe content has been detected";
+  }
+
+  // Favicon
+  if(keyPoints.favicon) {
+    document.getElementById("site-favicon").classList.add("success-mark")
+    document.getElementById("site-favicon").innerHTML = "Great, Your website has a favicon";
+  } else {
+    document.getElementById("site-favicon").classList.add("error-mark")
+    document.getElementById("site-favicon").innerHTML = "Oops, Your website has not favicon";
+  }
+
+  // Doctype
+  document.getElementById("site-doctype").classList.add("success-mark")
+  document.getElementById("site-doctype").innerHTML = "Your webpage doctype is: " + keyPoints.doctype;;
+
+  // Encoding
+  if(keyPoints.encoding === 'UTF-8') {
+    document.getElementById("site-encoding").classList.add("success-mark")
+    document.getElementById("site-encoding").innerHTML = "Great, language/character encoding is specified: " + keyPoints.encoding;
+  } else {
+    document.getElementById("site-encoding").classList.add("warning-mark")
+    document.getElementById("site-encoding").innerHTML = "Language/character encoding is specified: " + keyPoints.encoding;
+  }
 }
