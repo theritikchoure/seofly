@@ -1,0 +1,21 @@
+{
+  "name": "SEOFLY - On Page SEO",
+  "version": "1.0",
+  "manifest_version": 3,
+  "description": "SEOFLY - An extension to help you to improve you on page seo",
+  "permissions": ["scripting"],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "SEOFLY",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "32": "/assets/logo.png"
+    }
+  }
+}

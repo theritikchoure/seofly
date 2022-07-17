@@ -1,0 +1,43 @@
+#seofly-body {
+  width: 780px;
+  height: 598px;
+  overflow: overlay;
+  position: relative !important;
+  margin: 0;
+}
+
+#header {
+  display: flex;
+  width: 100%;
+}
+
+#logo {
+  margin-top: 0px;
+  border-radius: 50%;
+  margin-left: 20px;
+  height: 50px;
+  width: 50px;
+}
+
+.container {
+  width: 280px;
+  color: #314d3e;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 8px;
+}
+
+.textbox {
+  width: 100%;
+  font-size: 12px;
+  margin: 0;
+  padding: 0px 2px;
+}
+
+.textbox:focus {
+  outline: 0;
+  border-color: #66afe9;
+}
