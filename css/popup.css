@@ -28,11 +28,9 @@
 }
 
 #logo {
-  margin-top: 0px;
-  border-radius: 50%;
-  margin-left: 20px;
-  height: 40px;
-  width: 40px;
+  margin-top: 12%;
+  width: 15%;
+  margin-left: 42%;
 }
 
 #title {
@@ -138,7 +136,7 @@
   height: 0px;
   background-color: #e0e3fe;
   position: absolute;
-  top: -50px;
+  top: 150px;
   bottom: 0;
   left: 0;
   right: 0;
