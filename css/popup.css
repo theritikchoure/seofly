@@ -202,7 +202,7 @@
 }
 
 .card:hover {
-  border: 1px solid #e0e3fe;
+  border: 2px solid #e0e3fe;
 }
 
 .card-value {
@@ -238,4 +238,44 @@
   font-size: 11px;
   margin-right: 7px;
   border-radius: 18px;
+}
+
+.image-list-item {
+  padding: 10px 30px;
+  list-style-type: none;
+  overflow-wrap: anywhere;
+}
+
+.image-list-item:nth-child(even) {
+  background: #f2f2f2;
+}
+
+#myProgress {
+  margin-top: 20px;
+  width: 100%;
+  background-color: #ddd;
+  border-radius: 20px;
+}
+
+#myBar {
+  width: 10%;
+  height: 20px;
+  background-color: #0521CA;
+  text-align: center;
+  line-height: 20px;
+  color: white;
+  border-radius: 20px;
+}
+
+#score-title {
+  text-align: center;
+  font-size: 15px;
+  margin-bottom: 0px;
+}
+
+.score-row {
+  margin-top: -15px;
+  padding: 15px;
+  font-size: 14px;
+  border-bottom: 2px solid #eff2f5;
 }

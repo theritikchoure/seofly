@@ -52,6 +52,7 @@ async function getDocumentInfo() {
   const getImageAltText = () => {
     let imagesWithoutAlt = [];
     let nodeList = document.getElementsByTagName("img");
+    let totalImages = nodeList.length;
 
     for (let i = 0; i < nodeList.length; i++)
     {
@@ -61,7 +62,7 @@ async function getDocumentInfo() {
       }
     }
 
-    return imagesWithoutAlt;
+    return { totalImages, imagesWithoutAlt };
   }
 
   const getOGTags = () => {
@@ -133,15 +134,15 @@ async function getDocumentInfo() {
   let h6Count = document.getElementsByTagName("h6").length;
 
   // Alt Text of Images
-  let imageAltText = getImageAltText();
+  let images = getImageAltText();
 
   // XML Sitemap
   let xmlRes = await fetch('sitemap.xml');
-  let xmlSitemap = xmlRes.status === 404 ? 'Not found' : 'Found';
+  let xmlSitemap = xmlRes.status === 404 ? false : true;
   
   // XML Sitemap
   let robotsRes = await fetch('robots.txt');
-  let robotsTxt = robotsRes.status === 404 ? 'Not found' : 'Found';
+  let robotsTxt = robotsRes.status === 404 ? false : true;
 
   // Iframe
   let iframe = document.getElementsByTagName('iframe').length > 0 ? true : false;
@@ -184,10 +185,13 @@ async function getDocumentInfo() {
   }
   // links (End)
 
+  // domain 
+  let domain = document.domain;
+
 
   let keyPoints = {title, description, h1Count, h2Count, h3Count, h4Count, h5Count, h6Count, 
-                   favicon, imageAltText, xmlSitemap, robotsTxt, doctype, encoding, iframe, 
-                   canonicalUrl, noindexTag, ssl, ogTags, jsCount, cssCount }
+                   favicon, images, xmlSitemap, robotsTxt, doctype, encoding, iframe, 
+                   canonicalUrl, noindexTag, ssl, ogTags, jsCount, cssCount, domain }
 
   let dataObject = { baseUrl, keyPoints }
 
@@ -197,6 +201,9 @@ async function getDocumentInfo() {
 function dataToPopup(response) {
 
   const { keyPoints, baseUrl } = response.value;
+
+  let score = 0
+  let scorePerSuccess = 7.14;
 
   console.log("datatopopup")
 
@@ -209,14 +216,20 @@ function dataToPopup(response) {
   document.getElementById("site-title").innerHTML = keyPoints.title;
   document.getElementById("title-length").innerHTML = "<b>Length : </b>" + keyPoints.title.length;
   if(keyPoints.title.length > 10 && keyPoints.title.length < 70) {
+    score = scorePerSuccess + score;
     document.getElementById('site-title').classList.add("success-mark")
+  } else {
+    document.getElementById('site-title').classList.add("error-mark")
   }
 
   // Description
   document.getElementById("site-description").innerHTML = keyPoints.description;
   document.getElementById("description-length").innerHTML = "<b>Length : </b>" + keyPoints.description.length;
   if(keyPoints.description.length > 70 && keyPoints.description.length < 320) {
+    score = scorePerSuccess + score;
     document.getElementById('site-description').classList.add("success-mark")
+  } else {
+    document.getElementById('site-description').classList.add("warning-mark")
   }
 
   // Headings
@@ -226,10 +239,12 @@ function dataToPopup(response) {
   document.getElementById("heading-h4").innerHTML = keyPoints.h4Count;
   document.getElementById("heading-h5").innerHTML = keyPoints.h5Count;
   document.getElementById("heading-h6").innerHTML = keyPoints.h6Count;
+
   if(keyPoints.h1Count > 1) {
     document.getElementById("site-headings").innerHTML = "Your Webpage has more than 1 h1 tags";
     document.getElementById('site-headings').classList.add("error-mark")
   } else if(keyPoints.h1Count === 1) {
+    score = scorePerSuccess + score;
     document.getElementById("site-headings").innerHTML = "Good, Your webpage has only 1 h1 tag";
     document.getElementById('site-headings').classList.add("success-mark")
   } else if(keyPoints.h1Count <= 0) {
@@ -237,21 +252,64 @@ function dataToPopup(response) {
     document.getElementById('site-headings').classList.add("warning-mark")
   }
 
-  document.getElementById("site-alt-text").innerHTML = keyPoints.imageAltText;
-  document.getElementById("site-xml").innerHTML = keyPoints.xmlSitemap;
-  document.getElementById("site-robots").innerHTML = keyPoints.robotsTxt;
+  // Images without alt text
+  document.getElementById("site-alt-text").innerHTML = keyPoints.images.totalImages;
+  if(keyPoints.images.imagesWithoutAlt.length > 0) {
+    document.getElementById('images-withuot-alt').classList.add("error-mark")
+    document.getElementById("images-withuot-alt").innerHTML = keyPoints.images.imagesWithoutAlt.length + " ALT attributes are empty or missing.";
+
+    const div = document.getElementById('images-withuot-alt');
+    const ul = document.createElement("ul");
+    ul.setAttribute("id", "image-list");
+
+    for (let i = 0; i < keyPoints.images.imagesWithoutAlt.length; i++) {
+      const li = document.createElement("li");
+      li.innerHTML = keyPoints.images.imagesWithoutAlt[i];
+      li.setAttribute("class", "image-list-item")
+      ul.appendChild(li);
+    }
+
+    div.appendChild(ul);
+
+  } else {
+    score = scorePerSuccess + score;
+    document.getElementById('images-withuot-alt').classList.add("success-mark")
+    document.getElementById("images-withuot-alt").innerHTML =  "Good, Every images have alt attributes.";
+  }
+
+  // XML Sitemap
+  if (keyPoints.xmlSitemap) {
+    score = scorePerSuccess + score;
+    document.getElementById('site-xml').classList.add("success-mark")
+    document.getElementById("site-xml").innerHTML = "Good, you have XML Sitemap file";
+  } else {
+    document.getElementById('site-xml').classList.add("error-mark")
+    document.getElementById("site-xml").innerHTML = "Oops, you have not XML Sitemap file";
+  }
+
+  // Robots.txt
+  if (keyPoints.robotsTxt) {
+    score = scorePerSuccess + score;
+    document.getElementById('site-robots').classList.add("success-mark")
+    document.getElementById("site-robots").innerHTML = "Good, you have Robots.txt file";
+  } else {
+    document.getElementById('site-robots').classList.add("error-mark")
+    document.getElementById("site-robots").innerHTML = "Oops, you have not Robots.txt file";
+  }
 
   // Iframe
   if(keyPoints.iframe) {
     document.getElementById("site-iframe").classList.add("error-mark")
     document.getElementById("site-iframe").innerHTML = "Oops, Your website contains iframe";
   } else {
-    document.getElementById("site-iframe").classList.add("error-mark")
+    score = scorePerSuccess + score;
+    document.getElementById("site-iframe").classList.add("success-mark")
     document.getElementById("site-iframe").innerHTML = "Perfect, no iframe content has been detected";
   }
 
   // Favicon
   if(keyPoints.favicon) {
+    score = scorePerSuccess + score;
     document.getElementById("site-favicon").classList.add("success-mark")
     document.getElementById("site-favicon").innerHTML = "Great, Your website has a favicon";
   } else {
@@ -260,15 +318,87 @@ function dataToPopup(response) {
   }
 
   // Doctype
+  score = scorePerSuccess + score;
   document.getElementById("site-doctype").classList.add("success-mark")
   document.getElementById("site-doctype").innerHTML = "Your webpage doctype is: " + keyPoints.doctype;;
 
   // Encoding
   if(keyPoints.encoding === 'UTF-8') {
+    score = scorePerSuccess + score;
     document.getElementById("site-encoding").classList.add("success-mark")
     document.getElementById("site-encoding").innerHTML = "Great, language/character encoding is specified: " + keyPoints.encoding;
   } else {
     document.getElementById("site-encoding").classList.add("warning-mark")
     document.getElementById("site-encoding").innerHTML = "Language/character encoding is specified: " + keyPoints.encoding;
   }
+
+  if (keyPoints.ogTags) {
+    score = scorePerSuccess + score;
+    document.getElementById("site-og").classList.add("success-mark")
+    document.getElementById("site-og").innerHTML = "Your page is using Facebook Open Graph Tags.";
+  } else {
+    document.getElementById("site-og").classList.add("error-mark")
+    document.getElementById("site-og").innerHTML = "Your page is not using Facebook Open Graph Tags.";
+  }
+  
+  if (keyPoints.canonicalUrl) {
+    score = scorePerSuccess + score;
+    document.getElementById("site-canonical").classList.add("success-mark")
+    document.getElementById("site-canonical").innerHTML = "Your page is using the Canonical Tag.";
+    let canonical = document.getElementById("site-canonical")
+    let div = document.createElement("a");
+    div.setAttribute("id", "site-canonical-url");
+    div.setAttribute("class", "card-value");
+    div.href = keyPoints.canonicalUrl;
+    div.innerHTML = keyPoints.canonicalUrl;
+
+    canonical.parentNode.insertBefore(div, canonical.nextSibling);
+  } else {
+    document.getElementById("site-canonical").classList.add("error-mark")
+    document.getElementById("site-canonical").innerHTML = "Your page is not using the Canonical Tag.";
+  }
+
+  // NoIndex Tag
+  if (!keyPoints.noindexTag) {
+    score = scorePerSuccess + score;
+    document.getElementById("site-noindex").classList.add("success-mark");
+    document.getElementById("site-noindex").innerHTML = "Your page is not using the Noindex Tag which prevents indexing.";
+  } else {
+    document.getElementById("site-noindex").classList.add("error-mark");
+    document.getElementById("site-noindex").innerHTML = "Your page is using the Noindex Tag which prevents indexing.";
+  }
+
+  // SSL Enabled
+  if (keyPoints.ssl) {
+    score = scorePerSuccess + score;
+    document.getElementById("site-ssl").classList.add("success-mark")
+    document.getElementById("site-ssl").innerHTML = "Greate, Your website has SSL enabled.";
+  } else {
+    document.getElementById("site-ssl").classList.add("error-mark")
+    document.getElementById("site-ssl").innerHTML = "Oops, Your website has not been SSL enabled.";
+  }
+
+  // Number of Resources
+  document.getElementById("resource-js").innerHTML = keyPoints.jsCount;
+  document.getElementById("resource-css").innerHTML = keyPoints.cssCount;
+
+  document.getElementById("site-domain").innerHTML = keyPoints.domain;
+  let date = new Date();
+  document.getElementById("current-date").innerHTML = date.toLocaleString();
+
+  scoreProgressBar(score);
+}
+
+function scoreProgressBar(score) {
+  var elem = document.getElementById("myBar");
+    var width = score.toFixed(2);
+    var id = setInterval(frame, 10);
+    function frame() {
+      if (width >= 100) {
+        clearInterval(id);
+      } else {
+        elem.style.width = width + "%";
+        elem.innerHTML = width  + "%";
+      }
+    }
 }

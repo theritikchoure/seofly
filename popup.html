@@ -24,6 +24,23 @@
     <div id="main-wrapper" style="display: none">
       <h2 id="base-url"></h2>
 
+      <div class="card">
+        <h3 id="score-title" class="card-title">Score Card</h3>
+        <div class="row score-row">
+          <div class="col-2" id="site-domain-name">Domain</div>
+          <div class="col-2" id="site-domain"></div>
+        </div>
+        
+        <div class="row score-row">
+          <div class="col-2" id="report-gen-time">Current Time</div>
+          <div class="col-2" id="current-date"></div>
+        </div>
+
+        <div id="myProgress"> 
+          <div id="myBar">0%</div>
+        </div>
+      </div>
+
       <!-- Site Title -->
       <div class="card">
           <div>
@@ -64,7 +81,10 @@
       <div class="card">
           <div>
             <div class="col-6 card-title">Alt Text in Images :</div>
-            <div class="col-6 card-value" id="site-alt-text"></div>
+            <div class="col-6 card-value">We found 
+              <span id="site-alt-text"></span> images on the web page.
+            </div>
+            <div class="col-6 card-value" id="images-withuot-alt"></div>
           </div>
       </div>
 
@@ -115,6 +135,53 @@
             <div class="col-6 card-value" id="site-encoding"></div>
           </div>
       </div>
+
+      <!-- Open Graph Tags -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">Open Graph Tags :</div>
+            <div class="col-6 card-value" id="site-og"></div>
+          </div>
+      </div>
+
+      <!-- Canonical Tag -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">Canonicalization URL :</div>
+            <div class="col-6 card-value" id="site-canonical"></div>
+          </div>
+      </div>
+
+      <!-- No index Tag -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">No Index Tag :</div>
+            <div class="col-6 card-value" id="site-noindex"></div>
+          </div>
+      </div>
+
+      <!-- SSL Certificate -->
+      <div class="card">
+          <div>
+            <div class="col-6 card-title">SSL Enabled :</div>
+            <div class="col-6 card-value" id="site-ssl"></div>
+          </div>
+      </div>
+
+      <!-- Number of Resources -->
+      <div class="card">
+        <div>
+          <div class="col-6 card-title">Number of Resources :</div>
+          <div class="col-6 card-value" id="site-resources">This check displays the total number of files that need to be retrieved from web servers to load your page. </div>
+          <div class="col-6 card-value" >
+              <div class="row">
+                <div class="col-2">CSS Files : <span id="resource-css"></span></div>
+                  <div class="col-2">JavaScript Files : <span id="resource-js"></span></div>
+              </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div id="footer">
