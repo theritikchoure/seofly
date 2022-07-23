@@ -28,6 +28,7 @@
     <div id="main-wrapper" style="display: none">
       <h2 id="base-url"></h2>
 
+      <!-- Score Card -->
       <div class="card">
         <h3 id="score-title" class="card-title">Score Card</h3>
         <div class="row score-row">
@@ -186,6 +187,28 @@
         </div>
       </div>
 
+      <!-- Score Card -->
+      <div class="card">
+        <h3 id="score-title" class="card-title">Performance Matrix</h3>
+        <div class="row score-row">
+          <div class="col-2 perf-col">Dom Completed : <span id="performance-dom-completed"></span></div>
+          <div class="col-2 perf-col">Connect Time : <span id="performance-connect-time"></span></div>
+        </div>
+        
+        <div class="row score-row">
+          <div class="col-2 perf-col">Dom Content Event : <span id="performance-dom-content"></span></div>
+          <div class="col-2 perf-col">Response Time : <span id="performance-response-time"></span></div>
+        </div>
+
+        <div class="row score-row">
+          <div class="col-2 perf-col">Unload Event : <span id="performance-unload-event"></span></div>
+          <div class="col-2 perf-col">Dom Interactive : <span id="performance-dom-interactive"></span></div>
+        </div>
+
+        <div class="row score-row">
+          <div class="col-2 perf-col">Redirect Time : <span id="performance-redirect-time"></span></div>
+        </div>
+      </div>
     </div>
 
     <div id="footer">

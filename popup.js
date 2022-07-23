@@ -30,90 +30,180 @@ async function getDocumentInfo() {
 
   console.log("getDocumentInfo")
 
+  // get performance parameters
+  const getPerformance = () => {
+    try {
+      let perfObject = {};
+      let { timing, timeOrigin } = JSON.parse(JSON.stringify(window.performance));
+      perfObject.domCompleted = (timing.domComplete - timeOrigin)/1000; // ms to s
+      perfObject.connectTime = (timing.connectEnd - timing.connectStart)/1000; //ms to s
+      perfObject.domContentEvent = (timing.domContentLoadedEventEnd - timing.domContentLoadedEventStart)/1000; //ms to s
+      perfObject.responseTime = (timing.responseEnd - timing.requestStart)/1000; // ms to s
+      perfObject.unloadEvent = (timing.unloadEventEnd - timing.unloadEventStart)/1000; // ms to s
+      perfObject.domInteractive = (timing.domInteractive - timeOrigin)/1000; // ms to s
+      perfObject.redirectTime = (timing.redirectEnd - timing.redirectStart)/1000; // ms to s
+
+      return perfObject;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  // get Meta Description
+  const metaDescription = () => {
+    try {
+      const description = document.getElementsByTagName('meta').description.content;
+
+      if(description.length > 0) {
+        return description;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
+  }
+
   // get favicon function
   const getFavicon = () => {
-    let favicon = undefined;
-    let nodeList = document.getElementsByTagName("link");
-    for (let i = 0; i < nodeList.length; i++)
-    {
-        if((nodeList[i].getAttribute("rel") == "icon")||(nodeList[i].getAttribute("rel") == "shortcut icon"))
-        {
-            favicon = nodeList[i].getAttribute("href");
-        }
-    }
-  
-    if(favicon === undefined || favicon === null || favicon === "") {
+    try {
+      let favicon = undefined;
+      let nodeList = document.getElementsByTagName("link");
+      for (let i = 0; i < nodeList.length; i++)
+      {
+          if((nodeList[i].getAttribute("rel") == "icon")||(nodeList[i].getAttribute("rel") == "shortcut icon"))
+          {
+              favicon = nodeList[i].getAttribute("href");
+          }
+      }
+    
+      if(favicon) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
       return false;
-    } else {
-      return true;
     }
   }
 
   const getImageAltText = () => {
-    let imagesWithoutAlt = [];
-    let nodeList = document.getElementsByTagName("img");
-    let totalImages = nodeList.length;
+    try {
+      let imagesWithoutAlt = [];
+      let nodeList = document.getElementsByTagName("img");
+      let totalImages = nodeList.length;
 
-    for (let i = 0; i < nodeList.length; i++)
-    {
-      let altText = nodeList[i].alt.length > 0 ? true : false;
-      if(!altText) {
-        imagesWithoutAlt.push(nodeList[i].src)
+      for (let i = 0; i < nodeList.length; i++)
+      {
+        let altText = nodeList[i].alt.length > 0 ? true : false;
+        if(!altText) {
+          imagesWithoutAlt.push(nodeList[i].src)
+        }
       }
-    }
 
-    return { totalImages, imagesWithoutAlt };
+      return { totalImages, imagesWithoutAlt };
+    } catch (error) {
+      return false;
+    }
+  }
+
+  const xmlSitemapExists = async() => {
+    try {
+      let xmlRes = await fetch('/sitemap.xml');
+      let xmlSitemap = xmlRes.status === 404 ? false : true;
+      return xmlSitemap;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  const robotsTxtExists = async () => {
+    try {
+      let robotsRes = await fetch('/robots.txt');
+      let robotsTxt = robotsRes.status === 404 ? false : true;
+      return robotsTxt;
+    } catch (error) {
+      return false;
+    }
   }
 
   const getOGTags = () => {
-    let ogTags = false;
-    let nodeList = document.querySelectorAll("meta[property]");
+    try {
+      let ogTags = false;
+      let nodeList = document.querySelectorAll("meta[property]");
 
-    for (let i = 0; i < nodeList.length; i++)
-    {
-      let isOgTag = nodeList[i].getAttribute('property').includes('og');
-      if(isOgTag) {
-        ogTags = true;
+      for (let i = 0; i < nodeList.length; i++)
+      {
+        let isOgTag = nodeList[i].getAttribute('property').includes('og');
+        if(isOgTag) {
+          ogTags = true;
+        }
       }
-    }
 
-    return ogTags;
+      return ogTags;
+    } catch (error) {
+      return false;
+    }
   }
 
   // get favicon function
   const getCanonicalUrl = () => {
-    let canonicalUrl = undefined;
-    let nodeList = document.getElementsByTagName("link");
-    for (let i = 0; i < nodeList.length; i++)
-    {
-        if((nodeList[i].getAttribute("rel") == "canonical"))
-        {
-          canonicalUrl = nodeList[i].getAttribute("href");
-        }
-    }
-  
-    if(canonicalUrl === undefined || canonicalUrl === null || canonicalUrl === "") {
+    try {
+      let canonicalUrl = undefined;
+      let nodeList = document.getElementsByTagName("link");
+      for (let i = 0; i < nodeList.length; i++)
+      {
+          if((nodeList[i].getAttribute("rel") == "canonical"))
+          {
+            canonicalUrl = nodeList[i].getAttribute("href");
+          }
+      }
+    
+      if(canonicalUrl) {
+        return canonicalUrl;
+      } else {
+        return false;
+      }
+    } catch (error) {
       return false;
-    } else {
-      return canonicalUrl;
     }
   }
 
   const getNoindexTag = () => {
-    let content = document.getElementsByTagName('meta').robots.content
-    let included = content.includes('noindex');
+    try {
+      let robotsTagExists = document.getElementsByTagName('meta').robots.content
+      if(robotsTagExists) {
+        let included = content.includes('noindex');
 
-    if(included) return true;
-    else return false;
+        if(included) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
+    } catch(error) {
+      return false
+    } 
   }
 
   const getSSL = () => {
-    let content = document.location.protocol
-    let included = content.includes('https');
+    try {
+      let content = document.location.protocol
+      let included = content.includes('https');
 
-    if(included) return true;
-    else return false;
+      if(included) return true;
+      else return false;
+    } catch (error) {
+      return false;
+    }
   }
+
+  // Performance Parameter
+  let performanceObject = getPerformance();
+
+  console.log({performanceObject});
 
   // Base URL
   let baseUrl = document.baseURI;
@@ -122,8 +212,8 @@ async function getDocumentInfo() {
   let title = document.title;
 
   // Meta description
-  let description = document.getElementsByTagName('meta').description.content;
-
+  let description = metaDescription();
+  console.log("first")
   // Headings
   let h1Count = document.getElementsByTagName("h1").length;
 
@@ -137,12 +227,10 @@ async function getDocumentInfo() {
   let images = getImageAltText();
 
   // XML Sitemap
-  let xmlRes = await fetch('sitemap.xml');
-  let xmlSitemap = xmlRes.status === 404 ? false : true;
+  let xmlSitemap = xmlSitemapExists();
   
   // XML Sitemap
-  let robotsRes = await fetch('robots.txt');
-  let robotsTxt = robotsRes.status === 404 ? false : true;
+  let robotsTxt = robotsTxtExists();
 
   // Iframe
   let iframe = document.getElementsByTagName('iframe').length > 0 ? true : false;
@@ -189,11 +277,13 @@ async function getDocumentInfo() {
   let domain = document.domain;
 
 
-  let keyPoints = {title, description, h1Count, h2Count, h3Count, h4Count, h5Count, h6Count, 
+  let keyPoints = { performanceObject, title, description, h1Count, h2Count, h3Count, h4Count, h5Count, h6Count, 
                    favicon, images, xmlSitemap, robotsTxt, doctype, encoding, iframe, 
                    canonicalUrl, noindexTag, ssl, ogTags, jsCount, cssCount, domain }
 
   let dataObject = { baseUrl, keyPoints }
+
+  console.log("dataObject")
 
   chrome.runtime.sendMessage({ method: "set", value: dataObject }, () => {});
 }
@@ -209,6 +299,8 @@ function dataToPopup(response) {
 
   document.getElementById("report-btn").style.display = "none";
   document.getElementById("main-wrapper").style.display = "block";
+  document.getElementById("logo").style.marginTop = "5%";
+  document.getElementById("logo").style.marginBottom = "5%";
 
   document.getElementById("base-url").innerHTML = baseUrl;
 
@@ -223,13 +315,18 @@ function dataToPopup(response) {
   }
 
   // Description
-  document.getElementById("site-description").innerHTML = keyPoints.description;
-  document.getElementById("description-length").innerHTML = "<b>Length : </b>" + keyPoints.description.length;
-  if(keyPoints.description.length > 70 && keyPoints.description.length < 320) {
-    score = scorePerSuccess + score;
-    document.getElementById('site-description').classList.add("success-mark")
+  if(keyPoints.description) {
+    document.getElementById("site-description").innerHTML = keyPoints.description;
+    document.getElementById("description-length").innerHTML = "<b>Length : </b>" + keyPoints.description.length;
+    if(keyPoints.description.length > 70 && keyPoints.description.length < 320) {
+      score = scorePerSuccess + score;
+      document.getElementById('site-description').classList.add("success-mark")
+    } else {
+      document.getElementById('site-description').classList.add("warning-mark")
+    }
   } else {
-    document.getElementById('site-description').classList.add("warning-mark")
+    document.getElementById("site-description").innerHTML = "Oops, your webpage has not any meta description";
+    document.getElementById('site-description').classList.add("error-mark")
   }
 
   // Headings
@@ -385,6 +482,18 @@ function dataToPopup(response) {
   document.getElementById("site-domain").innerHTML = keyPoints.domain;
   let date = new Date();
   document.getElementById("current-date").innerHTML = date.toLocaleString();
+
+  // Performance Matrix
+  if(keyPoints.performanceObject) {
+    const { performanceObject } = keyPoints;
+    document.getElementById("performance-dom-completed").innerHTML = performanceObject.domCompleted + "s";
+    document.getElementById("performance-connect-time").innerHTML = performanceObject.connectTime + "s";
+    document.getElementById("performance-dom-content").innerHTML = performanceObject.domContentEvent + "s";
+    document.getElementById("performance-response-time").innerHTML = performanceObject.responseTime + "s";
+    document.getElementById("performance-unload-event").innerHTML = performanceObject.unloadEvent + "s";
+    document.getElementById("performance-dom-interactive").innerHTML = performanceObject.domInteractive + "s";
+    document.getElementById("performance-redirect-time").innerHTML = performanceObject.redirectTime + "s";
+  }
 
   scoreProgressBar(score);
 }

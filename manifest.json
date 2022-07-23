@@ -5,8 +5,7 @@
   "description": "SEOFLY - An extension to help you to improve you on page seo",
   "permissions": ["scripting"],
   "host_permissions": [
-    "http://*/*",
-    "https://*/*"
+    "<all_urls>"
   ],
   "background": {
     "service_worker": "background.js"
@@ -17,5 +16,11 @@
     "default_icon": {
       "32": "/assets/logo.png"
     }
+  },
+  "icons": {
+    "16": "/assets/logo.png",
+    "32": "/assets/logo.png",
+    "48": "/assets/logo.png",
+    "128": "/assets/logo.png"
   }
 }
