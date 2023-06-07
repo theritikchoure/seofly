@@ -30,5 +30,5 @@ An on-page SEO Chrome extension is a browser extension designed to help you opti
 - Create pull requests, submit bugs, suggest new features or documentation updates 🛠, To do so, go to [this page](https://github.com/theritikchoure/seofly/issues) and click the New issue button.
 
 ### Show your support
-* Follow me on Twitter [@iamadamdev](https://twitter.com/theritikchoure) for updates.
+* Follow me on Twitter [@theritikchoure](https://twitter.com/theritikchoure) for updates.
 * I do not ask for donations, all I ask is that you star this repo.
